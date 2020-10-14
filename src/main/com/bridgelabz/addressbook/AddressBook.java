@@ -92,7 +92,7 @@ public class AddressBook {
 
 	}
 
-	private static void sortByName() {
+	private static void sortByCity() {
 		// TODO Auto-generated method stub
 
 		for (String i : bookList.keySet()) {
@@ -100,7 +100,7 @@ public class AddressBook {
 			System.out.println("Book name is : " + i);
 			ArrayList<Initialization> contactDetails = bookList.get(i);
 			ArrayList<Initialization> contacts = new ArrayList<>();
-			System.out.println("Sorting people by name : ");
+			System.out.println("Sorting people by City : ");
 
 			for (int j = 0; j < contactDetails.size(); j++) {
 
@@ -108,10 +108,64 @@ public class AddressBook {
 
 			}
 
-			List<Initialization> sortedContacts = contacts.stream()
-					.sorted((o1, o2) -> o1.firstName.compareTo(o2.firstName)).collect(Collectors.toList());
+			List<Initialization> sortedcontacts = contacts.stream()
+					.sorted((o1, o2) -> o1.addressCity.compareTo(o2.addressCity)).collect(Collectors.toList());
 
-			for (Initialization contact : sortedContacts) {
+			for (Initialization contact : sortedcontacts) {
+				display(contact);
+			}
+
+		}
+
+	}
+
+	private static void sortByState() {
+		// TODO Auto-generated method stub
+
+		for (String i : bookList.keySet()) {
+
+			System.out.println("Book name is : " + i);
+			ArrayList<Initialization> contactDetails = bookList.get(i);
+			ArrayList<Initialization> contacts = new ArrayList<>();
+			System.out.println("Sorting people by State : ");
+
+			for (int j = 0; j < contactDetails.size(); j++) {
+
+				contacts.add(contactDetails.get(j));
+
+			}
+
+			List<Initialization> sortedcontacts = contacts.stream()
+					.sorted((o1, o2) -> o1.addressState.compareTo(o2.addressState)).collect(Collectors.toList());
+
+			for (Initialization contact : sortedcontacts) {
+				display(contact);
+			}
+
+		}
+
+	}
+
+	private static void sortByZip() {
+		// TODO Auto-generated method stub
+
+		for (String i : bookList.keySet()) {
+
+			System.out.println("Book name is : " + i);
+			ArrayList<Initialization> contactDetails = bookList.get(i);
+			ArrayList<Initialization> contacts = new ArrayList<>();
+			System.out.println("Sorting people by Zip : ");
+
+			for (int j = 0; j < contactDetails.size(); j++) {
+
+				contacts.add(contactDetails.get(j));
+
+			}
+
+			List<Initialization> sortedcontacts = contacts.stream().sorted((o1, o2) -> o1.addresszip - (o2.addresszip))
+					.collect(Collectors.toList());
+
+			for (Initialization contact : sortedcontacts) {
 				display(contact);
 			}
 
@@ -138,8 +192,26 @@ public class AddressBook {
 
 		System.out.println("address books and contact details added successfully ");
 
-		sortByName();
+		System.out.println("Select" + "\n1.  to sort by state" + "\n2. to sort by city" + "\n3. to sort by  pin");
+		Scanner sc = new Scanner(System.in);
+		int option = sc.nextInt();
+
+		switch (option) {
+		case 1:
+			sortByState();
+			break;
+
+		case 2:
+			sortByCity();
+			break;
+
+		case 3:
+			sortByZip();
+			break;
+
+		default:
+			System.out.println("Invalid choice");
+		}
 
 	}
-
 }
