@@ -1,20 +1,27 @@
 package main.com.bridgelabz.addressbook;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
-import java.util.Set;
-import java.util.stream.Collectors;
+
+
+
 
 public class AddressBook {
 
-	private static Map<String, ArrayList<Initialization>> bookList = new HashMap<String, ArrayList<Initialization>>();
-	private static Map<String, ArrayList<Initialization>> bookListSorted = new HashMap<String, ArrayList<Initialization>>();
+	// arraylist created to store contact details
+	private static ArrayList<Initialization> contactList = new ArrayList<>();
+	int k=1;
+public	static int startingContactNo=0;
+public	static int endingContactNo= 0;
+public static String Address_Book_File = "AddressBookContacts-file.txt";
 
+	// method to take input of contact details
 	private static Initialization getInitialContactDetails() {
 		System.out.println("enter contact details ----");
 
@@ -40,178 +47,210 @@ public class AddressBook {
 		System.out.println("enter email Address");
 		String emailAddress = scan.nextLine();
 
-		System.out.println("enter zip code of address -- interger type");
-		int zipCode = scan.nextInt();
+		System.out.println("enter zip code of addrese");
+		String zipCode = scan.nextLine();
 
 		Initialization entry = new Initialization(firstName, lastName, address, cityName, stateName, zipCode,
 				phoneNumber, emailAddress);
 		return entry;
 
 	}
+	// method to add contact details in linked list
 
-	public static void display(Initialization member) {
-		System.out.println("first name is :" + member.firstName);
-		System.out.println(" last name is :" + member.lastName);
-
-		System.out.println(" address is :" + member.address);
-
-		System.out.println(" city name is :" + member.addressCity);
-
-		System.out.println(" state name is :" + member.addressState);
-
-		System.out.println(" zip code is  :" + member.addresszip);
-
-		System.out.println(" phone number is :" + member.phoneNumber);
-
-		System.out.println(" email address is :" + member.email);
+	private void addContact(Initialization contact) {
+		contactList.add(contact);
+		System.out.println("contact added whose name is :  " + contact.firstName + " " + contact.lastName);
 
 	}
+	// method to display all entries of arraylist
 
-	private static void getAddressBook() {
-		// TODO Auto-generated method stub
+	private void displayContactDetails() {
+		System.out.println("Book number : " + k);
 
-		ArrayList<Initialization> contactDetails = new ArrayList<Initialization>();
-		Map<String, ArrayList<Initialization>> bookListLocal = new HashMap<String, ArrayList<Initialization>>();
+		System.out.println("displaying contact details :");
+		for ( int i=startingContactNo ; i < endingContactNo; i++) {
 
-		Scanner scan = new Scanner(System.in);
-		System.out.println("Enter address book name");
-		String bookname = scan.nextLine();
-		while (true) {
-			System.out.println("enter 1 to add more contact");
-			System.out.println("enter 2 to exit ");
-			int option = scan.nextInt();
-			if (option == 1) {
-				Initialization contactEntry = getInitialContactDetails();
-				contactDetails.add(contactEntry);
-			} else {
-				break;
-			}
+			System.out.println("");
+			System.out.println("contact details ");
+			Initialization con = contactList.get(i);
+			System.out.println("first name is :" + con.firstName);
+			System.out.println(" last name is :" + con.lastName);
 
+			System.out.println(" address is :" + con.address);
+
+			System.out.println(" city name is :" + con.addressCity);
+
+			System.out.println(" state name is :" + con.addressState);
+
+			System.out.println(" zip code is  :" + con.addresszip);
+
+			System.out.println(" phone number is :" + con.phoneNumber);
+
+			System.out.println(" email address is :" + con.email);
 		}
-		bookList.put(bookname, contactDetails);
-
+		k++;
 	}
+	
+	public void writingToFile(ArrayList<Initialization> contactList)
+	{
 
-	private static void sortByCity() {
-		// TODO Auto-generated method stub
+			 StringBuffer empBuffer = new StringBuffer();
+			 contactList.forEach(contact -> {
+				 String contactDetailsString = contact.toString().concat("\n");
+				 empBuffer.append(contactDetailsString);
+			 });
 
-		for (String i : bookList.keySet()) {
-
-			System.out.println("Book name is : " + i);
-			ArrayList<Initialization> contactDetails = bookList.get(i);
-			ArrayList<Initialization> contacts = new ArrayList<>();
-			System.out.println("Sorting people by City : ");
-
-			for (int j = 0; j < contactDetails.size(); j++) {
-
-				contacts.add(contactDetails.get(j));
-
-			}
-
-			List<Initialization> sortedcontacts = contacts.stream()
-					.sorted((o1, o2) -> o1.addressCity.compareTo(o2.addressCity)).collect(Collectors.toList());
-
-			for (Initialization contact : sortedcontacts) {
-				display(contact);
-			}
-
+			 try {
+				 Files.write(Paths.get(Address_Book_File),empBuffer.toString().getBytes());
+			 }
+			 catch(IOException x) {
+				 x.printStackTrace();
+			 }
 		}
+	
+	public ArrayList<Initialization> readingFromFile() {
+		ArrayList<Initialization> contactDetailsList = new ArrayList<Initialization>();
+		try {
+			Files.lines(new File(Address_Book_File).toPath()).map(line -> line.trim())
+					.forEach(line -> {
+					String data = line.toString();
+					String[] details = data.split(",");
 
-	}
+					String fName=details[0];			
+					String lName=details[1];
+					String address=details[2];
+					String city=details[3];
+					String state=details[4];
+					String zip  =  details[5];
+					String phone=details[6];
+					String email=details[7];
 
-	private static void sortByState() {
-		// TODO Auto-generated method stub
-
-		for (String i : bookList.keySet()) {
-
-			System.out.println("Book name is : " + i);
-			ArrayList<Initialization> contactDetails = bookList.get(i);
-			ArrayList<Initialization> contacts = new ArrayList<>();
-			System.out.println("Sorting people by State : ");
-
-			for (int j = 0; j < contactDetails.size(); j++) {
-
-				contacts.add(contactDetails.get(j));
-
-			}
-
-			List<Initialization> sortedcontacts = contacts.stream()
-					.sorted((o1, o2) -> o1.addressState.compareTo(o2.addressState)).collect(Collectors.toList());
-
-			for (Initialization contact : sortedcontacts) {
-				display(contact);
-			}
-
+					contactDetailsList.add(new Initialization(fName, lName, address, city,
+							state, zip, phone, email));
+					});
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-
-	}
-
-	private static void sortByZip() {
-		// TODO Auto-generated method stub
-
-		for (String i : bookList.keySet()) {
-
-			System.out.println("Book name is : " + i);
-			ArrayList<Initialization> contactDetails = bookList.get(i);
-			ArrayList<Initialization> contacts = new ArrayList<>();
-			System.out.println("Sorting people by Zip : ");
-
-			for (int j = 0; j < contactDetails.size(); j++) {
-
-				contacts.add(contactDetails.get(j));
-
+		return contactDetailsList;
 			}
 
-			List<Initialization> sortedcontacts = contacts.stream().sorted((o1, o2) -> o1.addresszip - (o2.addresszip))
-					.collect(Collectors.toList());
 
-			for (Initialization contact : sortedcontacts) {
-				display(contact);
-			}
-
-		}
-
-	}
-
+	// main method
 	public static void main(String[] args) {
 		Scanner scn = new Scanner(System.in);
 
-		System.out.println("this is address book program");
+		System.out.println("this is address book feature");
 
-		while (true) {
-			System.out.println("enter 1 to add more address books");
-			System.out.println("enter 2 to exit from address book program");
-			int option = scn.nextInt();
-			if (option == 1) {
-				getAddressBook();
+		AddressBook entry6 = new AddressBook();
 
-			} else {
-				break;
+		System.out.println("Enter no of contact books you wanted to add");
+		int noOfContactBooks = scn.nextInt();
+		String[] arrContactBookName = new String[noOfContactBooks];
+		HashMap<String,Integer>  contactBooksName = new  HashMap<String,Integer>();
+
+		boolean flag = true;
+
+		for (int b = 0; b < noOfContactBooks; b++) {
+			Scanner sc = new Scanner(System.in);
+
+			System.out.println("Enter the unique address book name");
+			String bookName = sc.nextLine();
+			arrContactBookName[b] = bookName;
+			// checking whether book name is unique or not
+			//if unique add details else program ends
+			for(int c=0;c<b;c++)
+			{
+				if(arrContactBookName[c].equals(bookName))
+				{
+					System.out.println("this book name already exist,invalid input");
+				flag = false;
 			}
+				else
+				{
+					System.out.println("");
+
+				}
+			}
+
+			if (flag == true)
+			{
+			System.out.println("Enter  no of contacts you wants to add in this book");
+			int noOfContacts = sc.nextInt();
+
+			contactBooksName.put(bookName,noOfContacts);
+
+
+				Scanner scan = new Scanner(System.in);
+
+				System.out.println("Book number : " +  (b+1));
+
+				System.out.println("Address Book name is :" + bookName);
+
+				for (int k = 0; k < noOfContacts; k++) {
+					System.out.println("Enter   new contact details ");
+					entry6.addContact(entry6.getInitialContactDetails());
+				}
+			}
+				else
+				{
+					b--;
+				}
+
+
+			}
+
+
+      entry6.writingToFile(contactList);
+       ArrayList<Initialization> contacts = entry6.readingFromFile();
+       
+       System.out.println("Displaying details after reading from file ");
+		System.out.println("number of contacts added to the book are : " +contacts.size() );
+
+		for (int j=0;j<contacts.size();j++)
+		{
+			Initialization con = contacts.get(j);
+			System.out.println("first name is :" + con.firstName);
+			System.out.println(" last name is :" + con.lastName);
+
+			System.out.println(" address is :" + con.address);
+
+			System.out.println(" city name is :" + con.addressCity);
+
+			System.out.println(" state name is :" + con.addressState);
+
+			System.out.println(" zip code is  :" + con.addresszip);
+
+			System.out.println(" phone number is :" + con.phoneNumber);
+
+			System.out.println(" email address is :" + con.email);
+
+			
 		}
 
-		System.out.println("address books and contact details added successfully ");
 
-		System.out.println("Select" + "\n1.  to sort by state" + "\n2. to sort by city" + "\n3. to sort by  pin");
-		Scanner sc = new Scanner(System.in);
-		int option = sc.nextInt();
 
-		switch (option) {
-		case 1:
-			sortByState();
-			break;
 
-		case 2:
-			sortByCity();
-			break;
-
-		case 3:
-			sortByZip();
-			break;
-
-		default:
-			System.out.println("Invalid choice");
+//		System.out.println("contact book after addition");
+//		System.out.println("");
+//
+//
+//
+//		for (int l=0;l<noOfContactBooks;l++) {
+//
+//		      System.out.println(" Book Name: " + arrContactBookName[l] + "  and No of contacts in book is/are: " + contactBooksName.get(arrContactBookName[l]));
+//
+//
+//
+//
+//
+//			 endingContactNo = endingContactNo +contactBooksName.get(arrContactBookName[l]);
+//
+//			System.out.println("Displaying book details  ");
+//
+//		entry6.displayContactDetails();
+//
+//				startingContactNo = startingContactNo+contactBooksName.get(arrContactBookName[l]);
+//
 		}
 
 	}
-}

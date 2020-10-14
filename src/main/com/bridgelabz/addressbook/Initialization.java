@@ -8,12 +8,12 @@ public class Initialization {
 		public  String addressCity;
 	public  String addressState;
 
-	public  int addresszip;
+	public  String addresszip;
 	public  String phoneNumber;
 	public  String email;
 
 	  // constructor for variable initilization
-	public Initialization(String firstName, String lastName,String address, String addressCity, String addressState, int addresszip,
+	public Initialization(String firstName, String lastName,String address, String addressCity, String addressState, String addresszip,
 			String phoneNumber, String email) {
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -79,13 +79,13 @@ public class Initialization {
 	/**
 	 * @return the zip
 	 */
-	public int getZip() {
+	public String getZip() {
 		return addresszip;
 	}
 	/**
 	 * @param zip the zip to set
 	 */
-	public void setZip(int zip) {
+	public void setZip(String zip) {
 		this.addresszip = zip;
 	}
 	/**
@@ -112,5 +112,13 @@ public class Initialization {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	
+	@Override
+	public String toString() {
+		
+		return  firstName + " , " + lastName + " , " + address + " , " + addressCity+ " , "
+				+ addressState + " , " + addresszip + " , " + phoneNumber + " , " + email;
+	}
+
 
 }
