@@ -3,19 +3,17 @@ package main.com.bridgelabz.addressbook;
 import java.util.ArrayList;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
-
-
+import java.util.stream.Collectors;
 
 public class AddressBook {
 
-	// arraylist created to store contact details
-	private ArrayList<Initialization> contactList = new ArrayList<>();
-	int k=1;
-public	static int startingContactNo=0;
-public	static int endingContactNo= 0;
+	private static Map<String, ArrayList<Initialization>> bookList = new HashMap<String, ArrayList<Initialization>>();
 
-	// method to take input of contact details
+	private static List<String> duplicateCheck;
+
 	private static Initialization getInitialContactDetails() {
 		System.out.println("enter contact details ----");
 
@@ -49,131 +47,71 @@ public	static int endingContactNo= 0;
 		return entry;
 
 	}
-	// method to add contact details in linked list
 
-	private void addContact(Initialization contact) {
-		contactList.add(contact);
-		System.out.println("contact added whose name is :  " + contact.firstName + " " + contact.lastName);
+	private static void getAddressBook() {
+		// TODO Auto-generated method stub
 
-	}
-	// method to display all entries of arraylist
+		ArrayList<Initialization> contactDetails = new ArrayList<Initialization>();
+		Map<String, ArrayList<Initialization>> bookListLocal = new HashMap<String, ArrayList<Initialization>>();
+		ArrayList<String> names = new ArrayList<String>();
 
-	private void displayContactDetails() {
-		System.out.println("Book number : " + k);
+		Scanner scan = new Scanner(System.in);
+		System.out.println("Enter address book name");
+		String bookname = scan.nextLine();
+		while (true) {
+			System.out.println("enter 1 to add more contact");
+			System.out.println("enter 2 to exit ");
+			int option = scan.nextInt();
+			if (option == 1) {
+				Initialization contactEntry = getInitialContactDetails();
+				String fullName = contactEntry.firstName + " " + contactEntry.lastName;
 
-		System.out.println("displaying contact details :");
-		for ( int i=startingContactNo ; i < endingContactNo; i++) {
+				// using stream to check duplicates
 
-			System.out.println("");
-			System.out.println("contact details ");
-			Initialization con = contactList.get(i);
-			System.out.println("first name is :" + con.firstName);
-			System.out.println(" last name is :" + con.lastName);
+				duplicateCheck = names.stream().filter(n -> n.equals(fullName)).collect(Collectors.toList());
 
-			System.out.println(" address is :" + con.address);
+				if (duplicateCheck.size() == 0) {
+					contactDetails.add(contactEntry);
+					names.add(contactEntry.firstName + " " + contactEntry.lastName);
+				} else {
+					System.out.println("this name already exists , not added to book");
+				}
+			} else {
+				break;
+			}
 
-			System.out.println(" city name is :" + con.addressCity);
-
-			System.out.println(" state name is :" + con.addressState);
-
-			System.out.println(" zip code is  :" + con.addresszip);
-
-			System.out.println(" phone number is :" + con.phoneNumber);
-
-			System.out.println(" email address is :" + con.email);
 		}
-		k++;
+		bookList.put(bookname, contactDetails);
+
 	}
 
-	// main method
 	public static void main(String[] args) {
 		Scanner scn = new Scanner(System.in);
 
-		System.out.println("this is address book feature");
+		System.out.println("this is address book program");
 
-		AddressBook entry6 = new AddressBook();
+		while (true) {
+			System.out.println("enter 1 to add more address books");
+			System.out.println("enter 2 to exit from address book program");
+			int option = scn.nextInt();
+			if (option == 1) {
+				getAddressBook();
 
-		System.out.println("Enter no of contact books you wanted to add");
-		int noOfContactBooks = scn.nextInt();
-		String[] arrContactBookName = new String[noOfContactBooks];
-		HashMap<String,Integer>  contactBooksName = new  HashMap<String,Integer>();
-
-		boolean flag = true;
-
-		for (int b = 0; b < noOfContactBooks; b++) {
-			Scanner sc = new Scanner(System.in);
-
-			System.out.println("Enter the unique address book name");
-			String bookName = sc.nextLine();
-			arrContactBookName[b] = bookName;
-			// checking whether book name is unique or not
-			//if unique add details else program ends
-			for(int c=0;c<b;c++)
-			{
-				if(arrContactBookName[c].equals(bookName))
-				{
-					System.out.println("this book name already exist,invalid input");
-				flag = false;
+			} else {
+				break;
 			}
-				else
-				{
-					System.out.println("");
+		}
 
-				}
+		System.out.println("address books and contact details added successfully ");
+
+		for (String i : bookList.keySet()) {
+			System.out.println("book name is " + i);
+			System.out.println("contact names are ");
+
+			ArrayList<Initialization> persons = bookList.get(i);
+			for (int y = 0; y < persons.size(); y++) {
+				System.out.println(persons.get(y).firstName + " " + persons.get(y).lastName);
 			}
-
-			if (flag == true)
-			{
-			System.out.println("Enter  no of contacts you wants to add in this book");
-			int noOfContacts = sc.nextInt();
-
-			contactBooksName.put(bookName,noOfContacts);
-
-
-				Scanner scan = new Scanner(System.in);
-
-				System.out.println("Book number : " +  (b+1));
-
-				System.out.println("Address Book name is :" + bookName);
-
-				for (int k = 0; k < noOfContacts; k++) {
-					System.out.println("Enter   new contact details ");
-					entry6.addContact(entry6.getInitialContactDetails());
-				}
-			}
-				else
-				{
-					b--;
-				}
-
-
-			}
-
-
-
-
-
-		System.out.println("contact book after addition");
-		System.out.println("");
-
-
-
-		for (int l=0;l<noOfContactBooks;l++) {
-
-		      System.out.println(" Book Name: " + arrContactBookName[l] + "  and No of contacts in book is/are: " + contactBooksName.get(arrContactBookName[l]));
-
-
-
-
-
-			 endingContactNo = endingContactNo +contactBooksName.get(arrContactBookName[l]);
-
-			System.out.println("Displaying book details  ");
-
-		entry6.displayContactDetails();
-
-				startingContactNo = startingContactNo+contactBooksName.get(arrContactBookName[l]);
-
 		}
 
 	}
