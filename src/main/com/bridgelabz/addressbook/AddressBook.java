@@ -13,165 +13,109 @@ import java.util.stream.Collectors;
 public class AddressBook {
 
 	private static Map<String, ArrayList<Initialization>> bookList = new HashMap<String, ArrayList<Initialization>>();
-	private static Map<String, ArrayList<String>> cityList = new HashMap<String, ArrayList<String>>();
+	private static Map<String, ArrayList<Initialization>> bookListSorted = new HashMap<String, ArrayList<Initialization>>();
 
-	private static Map<String, ArrayList<String>> stateList = new HashMap<String, ArrayList<String>>();
-	static ArrayList<Initialization> contactDetailsCity = new ArrayList<Initialization>();
-	static ArrayList<Initialization> contactDetailsState = new ArrayList<Initialization>();
+	private static Initialization getInitialContactDetails() {
+		System.out.println("enter contact details ----");
 
-	private static void addingBooksAndContacts() {
-		// TODO Auto-generated method stub
-		System.out.println("Let total books are 3");
+		Scanner scan = new Scanner(System.in);
 
-		String bookname1 = "bank";
-		String bookname2 = "defence";
-		String bookname3 = "pharma";
+		System.out.println("enter first name");
+		String firstName = scan.nextLine();
 
-		ArrayList<Initialization> list1 = new ArrayList<Initialization>();
-		ArrayList<Initialization> list2 = new ArrayList<Initialization>();
+		System.out.println("enter last name");
+		String lastName = scan.nextLine();
 
-		ArrayList<Initialization> list3 = new ArrayList<Initialization>();
+		System.out.println("enter street address");
+		String address = scan.nextLine();
 
-		Initialization intial1 = new Initialization("sumit", "phogat", "H.NO. 26", "bhiwani", "haryana", 124367,
-				"9087654590", "sumit@abc");
-		Initialization intial2 = new Initialization("amit", "pradhan", "H.NO. 26", "jalandhar", "punjab", 124367,
-				"9087654590", "sumit@abc");
-		Initialization intial3 = new Initialization("karmvir", "gahlawat", "H.NO. 26", "bhiwani", "haryana", 124367,
-				"9087654590", "sumit@abc");
-		Initialization intial4 = new Initialization("jaswinder", "singh", "H.NO. 26", "jalandhar", "punjab", 124367,
-				"9087654590", "sumit@abc");
-		Initialization intial5 = new Initialization("parveen", "jakhar", "H.NO. 26", "bhiwani", "haryana", 124367,
-				"9087654590", "sumit@abc");
+		System.out.println("enter city name");
+		String cityName = scan.nextLine();
 
-		Initialization intial6 = new Initialization("aman", "yadav", "H.NO. 26", "bhiwani", "haryana", 124367,
-				"9087654590", "sumit@abc");
-		Initialization intial7 = new Initialization("neeraj ", "karwal", "H.NO. 26", "jalandhar", "punjab",
-				124367, "9087654590", "sumit@abc");
-		Initialization intial8 = new Initialization("sunny", "das", "H.NO. 26", "gurgaon", "haryana", 124367,
-				"9087654590", "sumit@abc");
-		Initialization intial9 = new Initialization("santy", "jhutta", "H.NO. 26", "jaipur", "rajasthan", 124367,
-				"9087654590", "sumit@abc");
-		Initialization intial10 = new Initialization("aditya ", "jain", "H.NO. 26", "mathura", "uttar pradesh", 124367,
-				"9087654590", "sumit@abc");
+		System.out.println("enter state name");
+		String stateName = scan.nextLine();
+		System.out.println("enter phone number");
+		String phoneNumber = scan.nextLine();
 
-		list1.add(intial1);
-		list1.add(intial3);
-		list1.add(intial5);
-		list1.add(intial10);
+		System.out.println("enter email Address");
+		String emailAddress = scan.nextLine();
 
-		list2.add(intial2);
-		list2.add(intial8);
-		list2.add(intial7);
+		System.out.println("enter zip code of address -- interger type");
+		int zipCode = scan.nextInt();
 
-		list3.add(intial4);
-		list3.add(intial6);
-		list3.add(intial9);
-
-		bookList.put(bookname1, list1);
-		bookList.put(bookname2, list2);
-		bookList.put(bookname3, list3);
+		Initialization entry = new Initialization(firstName, lastName, address, cityName, stateName, zipCode,
+				phoneNumber, emailAddress);
+		return entry;
 
 	}
 
-	private static Map<String, ArrayList<String>> getPersonsCityWise() {
-		// TODO Auto-generated method stub
-				ArrayList<String> cityNames = new ArrayList<String>();
+	public static void display(Initialization member) {
+		System.out.println("first name is :" + member.firstName);
+		System.out.println(" last name is :" + member.lastName);
 
-		for (String i : bookList.keySet()) {
+		System.out.println(" address is :" + member.address);
 
-			contactDetailsCity = bookList.get(i);
+		System.out.println(" city name is :" + member.addressCity);
 
-			for (int j = 0; j < contactDetailsCity.size(); j++) {
+		System.out.println(" state name is :" + member.addressState);
 
+		System.out.println(" zip code is  :" + member.addresszip);
 
-					cityNames.add(contactDetailsCity.get(j).addressCity);
-			}
+		System.out.println(" phone number is :" + member.phoneNumber);
 
-		}
-
-		Set<String> duplicateRemoval = new LinkedHashSet<String>();
-	   duplicateRemoval.addAll(cityNames);
-	   cityNames.clear();
-	   cityNames.addAll(duplicateRemoval);
-
-
-
-
-
-
-		for (int y = 0; y < cityNames.size(); y++) {
-			ArrayList<String> personNames = new ArrayList<String>();
-
-			for (String i : bookList.keySet()) {
-
-				contactDetailsCity = bookList.get(i);
-
-				for (int j = 0; j < contactDetailsCity.size(); j++) {
-					Initialization initial = contactDetailsCity.get(j);
-					if (initial.addressCity.equals(cityNames.get(y))) {
-						personNames.add(initial.firstName + " " + initial.lastName);
-
-					}
-				}
-
-			}
-		 cityList.put(cityNames.get(y), personNames);
-			/*
-			 * System.out.println(cityNames.get(y)); for(int k=0;k<personNames.size();k++) {
-			 * System.out.println(personNames.get(k)); }
-			 * 
-			 */
-
-		}
-
-		return cityList;
+		System.out.println(" email address is :" + member.email);
 
 	}
 
-	private static Map<String, ArrayList<String>> getPersonsStateWise() {
+	private static void getAddressBook() {
 		// TODO Auto-generated method stub
-		ArrayList<String> stateNames = new ArrayList<String>();
+
+		ArrayList<Initialization> contactDetails = new ArrayList<Initialization>();
+		Map<String, ArrayList<Initialization>> bookListLocal = new HashMap<String, ArrayList<Initialization>>();
+
+		Scanner scan = new Scanner(System.in);
+		System.out.println("Enter address book name");
+		String bookname = scan.nextLine();
+		while (true) {
+			System.out.println("enter 1 to add more contact");
+			System.out.println("enter 2 to exit ");
+			int option = scan.nextInt();
+			if (option == 1) {
+				Initialization contactEntry = getInitialContactDetails();
+				contactDetails.add(contactEntry);
+			} else {
+				break;
+			}
+
+		}
+		bookList.put(bookname, contactDetails);
+
+	}
+
+	private static void sortByName() {
+		// TODO Auto-generated method stub
 
 		for (String i : bookList.keySet()) {
 
-			contactDetailsState = bookList.get(i);
+			System.out.println("Book name is : " + i);
+			ArrayList<Initialization> contactDetails = bookList.get(i);
+			ArrayList<Initialization> contacts = new ArrayList<>();
+			System.out.println("Sorting people by name : ");
 
-			for (int j = 0; j < contactDetailsState.size(); j++) {
+			for (int j = 0; j < contactDetails.size(); j++) {
 
-					stateNames.add(contactDetailsState.get(j).addressState);
+				contacts.add(contactDetails.get(j));
+
+			}
+
+			List<Initialization> sortedContacts = contacts.stream()
+					.sorted((o1, o2) -> o1.firstName.compareTo(o2.firstName)).collect(Collectors.toList());
+
+			for (Initialization contact : sortedContacts) {
+				display(contact);
 			}
 
 		}
-
-		Set<String> duplicateRemoval = new LinkedHashSet<String>();
-		   duplicateRemoval.addAll(stateNames);
-		   stateNames.clear();
-		   stateNames.addAll(duplicateRemoval);
-
-
-
-
-
-		for (int y = 0; y < stateNames.size(); y++) {
-			ArrayList<String> personNames = new ArrayList<String>();
-
-			for (String i : bookList.keySet()) {
-
-				contactDetailsState = bookList.get(i);
-
-				for (int j = 0; j < contactDetailsState.size(); j++) {
-					Initialization initial = contactDetailsState.get(j);
-					if (initial.addressState.equals(stateNames.get(y))) {
-						personNames.add(initial.firstName + " " + initial.lastName);
-					}
-				}
-
-			}
-			stateList.put(stateNames.get(y), personNames);
-
-		}
-
-		return stateList;
 
 	}
 
@@ -180,69 +124,21 @@ public class AddressBook {
 
 		System.out.println("this is address book program");
 
-		addingBooksAndContacts();
+		while (true) {
+			System.out.println("enter 1 to add more address books");
+			System.out.println("enter 2 to exit from address book program");
+			int option = scn.nextInt();
+			if (option == 1) {
+				getAddressBook();
+
+			} else {
+				break;
+			}
+		}
 
 		System.out.println("address books and contact details added successfully ");
 
-		System.out.println("enter 1 to search person by city");
-		System.out.println("enter 2 to search person by state");
-		int searchoption = scn.nextInt();
-
-		cityList = getPersonsCityWise();
-		stateList = getPersonsStateWise();
-
-
-
-
-
-		if (searchoption == 1) {
-			System.out.println("Enter city name  ");
-			Scanner scan = new Scanner(System.in);
-
-			String cityName = scan.nextLine();
-			System.out.println("total count of persons in the city is : " + cityList.get(cityName).size());
-			System.out.println("persons in the city are : ");
-
-			for (String i : cityList.keySet()) {
-
-				if (i.equals(cityName)) {
-
-					ArrayList<String> persons = cityList.get(i);
-					for (int y = 0; y < persons.size(); y++) {
-						System.out.println(persons.get(y));
-					}
-				}
-
-			}
-
-		}
-
-		else if (searchoption == 2) {
-
-			System.out.println("Enter state name  ");
-			Scanner sn = new Scanner(System.in);
-
-
-			String stateName = sn.nextLine();
-
-			System.out.println("total count of persons in the state is : " + stateList.get(stateName).size());
-			System.out.println("persons in the state are : ");
-
-			for (String i : stateList.keySet()) {
-
-				if (i.equals(stateName)) {
-
-					ArrayList<String> persons = stateList.get(i);
-					for (int y = 0; y < persons.size(); y++) {
-						System.out.println(persons.get(y));
-					}
-				}
-
-			}
-		}
-		else {
-			System.out.println("Wrong input");
-		}
+		sortByName();
 
 	}
 
