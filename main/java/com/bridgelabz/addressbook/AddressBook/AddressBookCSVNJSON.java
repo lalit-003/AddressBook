@@ -1,5 +1,6 @@
 package com.bridgelabz.addressbook.AddressBook;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -12,6 +13,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.opencsv.bean.CsvToBean;
@@ -21,13 +25,16 @@ import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 
-public class AddressBookCSV {
+public class AddressBookCSVNJSON {
 
 //
 	private static ArrayList<Initialization> contactList = new ArrayList<>();
 	public static int startingContactNo = 0;
 	public static int endingContactNo = 0;
 	public static String Address_Book_File_CSV = "D:\\FileIO\\demo\\addressbook.csv";
+	public static String Address_Book_File_JSON = "D:\\FileIO\\demo\\addressbook.JSON";
+	
+
 
 	// method to take input of contact details
 	private static Initialization getInitialContactDetails() {
@@ -99,7 +106,6 @@ public class AddressBookCSV {
 
 	// writing CSV file
 	public void writingToFile() throws IOException, CsvDataTypeMismatchException, CsvRequiredFieldEmptyException {
-		ArrayList<Initialization> contact = new ArrayList<>();
 		File file = new File(Address_Book_File_CSV);
 		try {
 			FileWriter outputfile = new FileWriter(file);
@@ -109,13 +115,9 @@ public class AddressBookCSV {
 			String[] header = { "firstName", "lastName", "address", "city", "state", "zipCode", "phoneNo", "    email" };
 			writer.writeNext(header);
 
-			contact.add(new Initialization("Lalit", "Gahlawat", "299", "bhiwani", "haryana", "124142", "1245341212",
-					"lalit@gmail.com"));
-			contact.add(new Initialization("Saurav", "Gahlawat", "299", "bhiwani", "haryana", "124142", "1245341212",
-					"lalit@gmail.com"));
-			
+						
 			// add data to csv
-			for (Initialization c : contact) {
+			for (Initialization c : contactList) {
 				String[] dataStr = c.addDataToCSV();
 				writer.writeNext(dataStr);
 			}
@@ -144,13 +146,64 @@ public class AddressBookCSV {
 	    } 
 	}
 
+	
+	public void writingToFileJSON() throws IOException, CsvDataTypeMismatchException, CsvRequiredFieldEmptyException {
+		
+		try {
+			Writer writer = Files.newBufferedWriter(Paths.get(Address_Book_File_JSON));
+			Gson gson = new Gson();
+			gson.toJson(contactList,writer);
+			writer.close();
+
+		} 
+		catch (IOException exception) {
+			exception.printStackTrace();	
+			}
+	}
+	
+	public static void readingFromJSON(String fileNameJson){
+		ArrayList<JsonObject> json=new ArrayList<JsonObject>();
+	    JsonObject obj;
+
+	    // This will reference one line at a time
+	    String line = null;
+
+	    try {
+	        // FileReader reads text files in the default encoding.
+	        FileReader fileReader = new FileReader(fileNameJson);
+
+	        // Always wrap FileReader in BufferedReader.
+	        BufferedReader bufferedReader = new BufferedReader(fileReader);
+
+	        while((line = bufferedReader.readLine()) != null) {
+	            obj = (JsonObject) new JsonParser().parse(line);
+	            json.add(obj);
+	            System.out.println(obj.get("firstName").toString()+":"+obj.get("lastName").toString()+":"+obj.get("address").toString()+":"+obj.get("addressCity").toString()+":"+
+	            					obj.get("addressState").toString()+":"+obj.get("addressZip").toString()+":"+obj.get("phoneNumber").toString()+":"+obj.get("email").toString());
+	        }
+
+	        bufferedReader.close();         
+	    }
+	    catch(Exception ex) {
+	    	 ex.printStackTrace(); 
+	    }
+
+	}
 	// main method
 	public static void main(String[] args)
 			throws IOException, CsvDataTypeMismatchException, CsvRequiredFieldEmptyException {
-		AddressBookCSV entry6 = new AddressBookCSV();
+		AddressBookCSVNJSON entry = new AddressBookCSVNJSON();
+		contactList.add(new Initialization("Lalit", "Gahlawat", "299", "bhiwani", "haryana", "124142", "1245341212",
+				"lalit@gmail.com"));
+		contactList.add(new Initialization("Saurav", "Gahlawat", "299", "bhiwani", "haryana", "124142", "1245341212",
+				"lalit@gmail.com"));
 
-		entry6.writingToFile();
-		entry6.readingFromFile();
+
+		entry.writingToFile();
+		entry.readingFromFile();
+		entry.writingToFileJSON();
+		entry.readingFromJSON(Address_Book_File_JSON);
+		
 
 	}
 
